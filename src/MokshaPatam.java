@@ -1,3 +1,4 @@
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -67,7 +68,7 @@ public class MokshaPatam {
             visited.add(i);
         }
         if (landmarks[landmark][0] < landmarks[landmark][1]) {
-            ArrayList<Integer> landmarksBetween = findLandmarksBetween(landmark, landmarks);
+            ArrayList<Integer> landmarksBetween = findLandmarksBetween(landmark, landmarks, true);
             if (landmarksBetween == null || landmarksBetween.isEmpty()) {
                 return true;
             }
@@ -80,23 +81,65 @@ public class MokshaPatam {
         }
     }
 
+    // First index is return array is the length of the path.
     public static ArrayList<Integer> findPath(int location, int[][] landmarks, ArrayList<Integer> visited) {
         if (visited.contains(location)) {
             return null;
         }
         if (location == landmarks.length - 1) {
-            return findPath
+            ArrayList<Integer> solution = new ArrayList<>();
+            solution.add(location);
+            return solution;
         }
+        visited.add(location);
+
+
+        // Case if next landmark is a ladder.
+        ArrayList<Integer> shortestDistance = new ArrayList<>();
+        if (landmarks[location][0] < landmarks[location][1]) {
+            ArrayList<Integer> landmarksBetween = findLandmarksBetween(location, landmarks, true);
+            ArrayList<Integer>[] paths = new ArrayList[landmarksBetween.size()];
+            for (int i = 0; i < paths.length; i++) {
+                paths[i] = findPath(landmarksBetween.get(i), landmarks, visited);
+                if (paths[i] != null) {
+                    paths[i].addFirst(landmarks[landmarksBetween.get(i)][0] - landmarks[location][0]);
+                }
+
+            }
+            int shortest = 0;
+            for (int i = 0; i < paths.length; i++) {
+                if (paths[i] != null) {
+                    if (paths[shortest].get(0) > paths[i].get(0)) {
+                        shortest = i;
+                    }
+                }
+            }
+            shortestDistance = paths[shortest];
+        }
+        else if (landmarks[location][0] > landmarks[location][1]) {
+            ArrayList<Integer> landmarksBetween = findLandmarksBetween(location, landmarks, false);
+
+        }
+        // Case if next landmark is a snake.
+        // Case if taking next landmark is not optimal
     }
 
-    public static ArrayList<Integer> findLandmarksBetween(int landmark, int[][] landmarks) {
+    public static ArrayList<Integer> findLandmarksBetween(int landmark, int[][] landmarks, boolean ladder) {
         if (landmark == landmarks.length - 1) {
             return null;
         }
+        int i = 0;
+        int end = 0;
+        if (ladder) {
+            int i = landmark + 1;
+            int end = landmarks[landmark][1];
+        }
+        else {
+            while ()
+        }
 
         ArrayList<Integer> landmarksBetween = new ArrayList<>();
-        int i = landmark + 1;
-        int end = landmarks[landmark][1];
+
 
         while (landmarks[i][0] <= end) {
             if (i == landmarks.length - 1) {
