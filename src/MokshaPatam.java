@@ -1,4 +1,3 @@
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -22,6 +21,7 @@ public class MokshaPatam {
         int finalSquare = boardsize * boardsize;
         int location = 0;
         int[][] landmarks = combineArrays(ladders, snakes);
+        landmarks[landmarks.length-1][0] = finalSquare;
         ArrayList<Integer> visited = new ArrayList<>();
 
         while (location != finalSquare) {
@@ -36,7 +36,7 @@ public class MokshaPatam {
 
     // Method to combine and sort two 2D integer arrays based off the first index in each array.
     public static int[][] combineArrays(int[][] arr1, int[][] arr2) {
-        int numLandmarks = arr1.length + arr2.length;
+        int numLandmarks = arr1.length + arr2.length + 1;
         int[][] arr3 = new int[numLandmarks][2];
 
         // Combines the two arrays.
@@ -49,6 +49,8 @@ public class MokshaPatam {
             arr3[i][1] = arr2[i - arr1.length][1];
         }
 
+        arr3[arr3.length - 1][0] = Integer.MAX_VALUE;
+
         // Sorts the new array based off the first value of each array.
         // I got this line from stack overflow.
         // This is the link: https://stackoverflow.com/questions/15452429/java-arrays-sort-2d-array
@@ -57,23 +59,55 @@ public class MokshaPatam {
         return arr3;
     }
 
-    // Returns true if taking a landmark leads to a more efficient path
-    public static boolean takeLandmark(int location, int[] landmark, int[][] landmarks, ArrayList<Integer> visited) {
-        if(visited.contains(landmark[1]))
-            return false;
-        for (int i = location; i < landmark[0]; i++) {
+    // Returns
+    public static int[] takeLandmark(int location, int landmark, int[][] landmarks, ArrayList<Integer> visited, int steps) {
+        if(visited.contains(landmarks[landmark][1]))
+            return new int[0];
+        for (int i = location; i < landmarks[landmark][0]; i++) {
             visited.add(i);
         }
-        if (landmark[0] < landmark[1]) {
+        if (landmarks[landmark][0] < landmarks[landmark][1]) {
+            ArrayList<Integer> landmarksBetween = findLandmarksBetween(landmark, landmarks);
+            if (landmarksBetween == null || landmarksBetween.isEmpty()) {
+                return true;
+            }
+            else {
+                min
+                for (int i = 0; i < landmarksBetween.size(); i++) {
 
+                }
+            }
         }
     }
 
-    public static int[] findLandmarksBetween(int start, int end, int[][] landmarks) {
+    public static ArrayList<Integer> findPath(int location, int[][] landmarks, ArrayList<Integer> visited) {
+        if (visited.contains(location)) {
+            return null;
+        }
+        if (location == landmarks.length - 1) {
+            return findPath
+        }
+    }
+
+    public static ArrayList<Integer> findLandmarksBetween(int landmark, int[][] landmarks) {
+        if (landmark == landmarks.length - 1) {
+            return null;
+        }
+
         ArrayList<Integer> landmarksBetween = new ArrayList<>();
-        int landmarkIndex = landmarks.
-        while (start <= end) {
-            if ()
+        int i = landmark + 1;
+        int end = landmarks[landmark][1];
+
+        while (landmarks[i][0] <= end) {
+            if (i == landmarks.length - 1) {
+                break;
+            }
+            if (landmarks[i][0] < end) {
+                landmarksBetween.add(i);
+            }
         }
+
+        return landmarksBetween;
     }
+
 }
