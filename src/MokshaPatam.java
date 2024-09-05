@@ -31,7 +31,7 @@ public class MokshaPatam {
         int[] pathTaken = new int[finalSpace + 1];
         System.out.println(Arrays.toString(landmarks));
         while (location != finalSpace) {
-            if (location >= 93) {
+            if (location >= finalSpace - 6) {
                 pathTaken[finalSpace] = location;
                 location = finalSpace;
                 break;
