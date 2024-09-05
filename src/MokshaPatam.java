@@ -1,6 +1,7 @@
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.Queue;
 
 /**
@@ -22,11 +23,37 @@ public class MokshaPatam {
     public static int fewestMoves(int boardsize, int[][] ladders, int[][] snakes) {
         ArrayList<Integer> spaces = new ArrayList<>();
         int location = 0;
-        int finalSpace = boardsize * boardsize;
+        int finalSpace = boardsize * boardsize - 1;
         int[] landmarks = makeArray(snakes, ladders);
+        landmarks[finalSpace - 1] = finalSpace;
+        ArrayList<Integer> visited = new ArrayList<>();
+        Queue<Integer> toVisit = new LinkedList<>();
+        int[] pathTaken = new int[boardsize];
 
-        while (location != finalSpace)
+        while (location != finalSpace) {
+            visited.add(location);
+            for (int i = 0; i < 6; i++) {
+                if (visited.contains(location + i)) {
+                    continue;
+                }
+                if (landmarks[location + i] != 0) {
+                    toVisit.add(landmarks[location + i]);
+                    pathTaken[landmarks[location + i]] = location;
+                }
+                else {
+                    toVisit.add(location + i);
+                    pathTaken[location + i] = location;
+                }
+            }
+            location = toVisit.poll();
+        }
 
+        ArrayList<Integer> path = new ArrayList<>();
+        while (location != 0) {
+            path.add(location);
+            location = pathTaken[location];
+        }
+        return path.size();
     }
 
 
@@ -35,10 +62,41 @@ public class MokshaPatam {
         if (visited.contains(location)) {
             return null;
         }
+        if (landmarks[location] == location && location != 0) {
+            return new ArrayList<>();
+        }
         visited.add(location);
         for (int i = 0; i < 6; i++) {
-
+            if (landmarks[location + i] != 0) {
+                toVisit.add(landmarks[location + 1]);
+            }
+            else {
+                toVisit.add(location + 1);
+            }
         }
+    }
+
+    public static ArrayList<Integer> bfs(int location, int parent, ArrayList<Integer> visited, Queue<Integer> toVisit, int[] landmarks) {
+        if (visited.contains(location)) {
+            return null;
+        }
+        if (landmarks[location] == location && location != 0) {
+            return new ArrayList<>();
+        }
+        for (int i = 0; i < 6; i++) {
+            if (visited.contains(location + i)) {
+                continue;
+            }
+            if (landmarks[location + i] != 0) {
+                toVisit.add(landmarks[location + i]);
+                visited.add(location + i);
+            }
+            else {
+                toVisit.add(location + i);
+                visited.add(location + 1)
+            }
+        }
+        bfs()
     }
 
     public static int[] makeArray(int[][] arr1, int[][] arr2) {
