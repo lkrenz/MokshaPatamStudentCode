@@ -1,6 +1,3 @@
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -10,24 +7,25 @@ import java.util.Queue;
  * for Adventures in Algorithms
  * at Menlo School in Atherton, CA
  *
- * Completed by: [YOUR NAME HERE]
+ * Completed by: Liam Krenz
  *
  */
 
 public class MokshaPatam {
-
-    /**
-     * TODO: Complete this function, fewestMoves(), to return the minimum number of moves
-     *  to reach the final square on a board with the given size, ladders, and snakes.
-     */
+    // Finds and returns fewest moves needed to complete a given board.
     public static int fewestMoves(int boardsize, int[][] ladders, int[][] snakes) {
-        ArrayList<Integer> spaces = new ArrayList<>();
         int location = 1;
+
+        // Array to hold all snakes and ladders, allows for constant time lookups.
         int[] landmarks = makeArray(snakes, ladders, boardsize + 1);
         landmarks[boardsize - 1] = boardsize;
+
+        // Stores previously visited spaces.
+        // Allows for constant time lookups while looking for next move and adding up moves.
         int[] visited = new int[boardsize + 1];
         Queue<Integer> toVisit = new LinkedList<>();
 
+        // While loop iterates through toVisit until final s
         while (location != boardsize) {
             if (location >= boardsize - 6) {
                 visited[boardsize] = location;
@@ -35,39 +33,47 @@ public class MokshaPatam {
                 break;
             }
 
+            // Handles all viable roles from the current location.
             for (int i = location + 1; i < location + 7; i++) {
                 if (visited[i] != 0) {
                     continue;
                 }
                 if (landmarks[i] != 0) {
+                    // Adds end of snake / ladder to toVisit
                     if (visited[landmarks[i]] == 0) {
                         toVisit.add(landmarks[i]);
                         visited[landmarks[i]] = location;
                     }
+                    // Adds beginning and end of snake to visited.
                     visited[i] = location;
                 }
                 else {
+                    // Adds non landmark tiles.
                     toVisit.add(i);
                     visited[i] = location;
                 }
             }
+
+            // Returns -1 if no path exists.
             if (toVisit.isEmpty()) {
                 return -1;
             }
             location = toVisit.poll();
         }
 
-        ArrayList<Integer> path = new ArrayList<>();
+        // Finds moves needed to reach end square.
+        int moves = 0;
         while (location != 1) {
-            path.add(location);
+            moves++;
             location = visited[location];
         }
-        return path.size();
+        return moves;
     }
 
 
 
 
+    // Merges the snake and ladder arrays into one array, allowing for constant time lookups.
     public static int[] makeArray(int[][] arr1, int[][] arr2, int boardsize) {
         int[] arr3 = new int[boardsize];
         for (int[] value : arr1) {
