@@ -70,9 +70,6 @@ public class MokshaPatam {
         return moves;
     }
 
-
-
-
     // Merges the snake and ladder arrays into one array, allowing for constant time lookups.
     public static int[] makeArray(int[][] arr1, int[][] arr2, int boardsize) {
         int[] arr3 = new int[boardsize];
